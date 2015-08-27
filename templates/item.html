@@ -1,0 +1,55 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<div id="wrap">
+		<div id="header"><h1>{{ item.name }}</h1></div>
+			<div id="nav">
+			  	<li>
+					<a href='{{url_for('updateItem',category_name = category.name, item_id=item.id)}}'>Edit</a>
+			  	</li>
+			  	<li>
+					<a href='{{url_for('deleteItem', category_name = category.name, item_id=item.id)}}'>Delete</a>
+				</li>
+			</div>
+
+			<div class = 'flash'>
+				{% with messages = get_flashed_messages() %}
+					{% if messages %}
+						  
+						<ul>
+						{% for message in messages %}
+							<li> <strong> {{ message }} </strong> </li>
+						{% endfor %}
+						</ul>
+					{% endif %}
+				{% endwith %}
+			</div>
+
+			<div id="main">
+				<div>
+					<span class = 'date'>
+						<p>Date added: {{item.date_added}} </p>
+					</span>
+				</div>
+				
+				<div class = 'description'>
+					<p>Description: {{item.description}}</p>
+				</div>
+
+				<div class = 'category'>
+					<p> Category: 
+						<a href='{{url_for('categoryList', category_name = category.name)}}'> {{category.name}} </a>
+					</p>
+				</div>
+			</div>
+		
+		<div id="footer">
+			<a href='{{url_for('categoryList', category_name = category.name)}}'>Return to category</a>
+		</div>
+	</div>
+</body>
+</html>
