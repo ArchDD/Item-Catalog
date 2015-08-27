@@ -48,6 +48,7 @@ Flask-Login 0.1.3
 1. Navigate to the catalog directory in command line or terminal
 2. Start python with command 'python'
 3. Create a session for the database via python, for example
+  
   from sqlalchemy import create_engine
 
   from sqlalchemy.orm import sessionmaker
@@ -61,6 +62,7 @@ Flask-Login 0.1.3
   DBSession = sessionmaker(bind = engine)
   
   session = DBSession()
+  
 4. Create and add a new object then commit, for example
   newCategory = Category(name = "uncategorised")
 
