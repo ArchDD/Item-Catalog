@@ -30,8 +30,11 @@ catalog/
 ## Software Requirements
 
 Python 2.7.10
+
 Werkzeug 0.8.3
+
 Flask 0.9
+
 Flask-Login 0.1.3
 
 ## Setup Instructions
