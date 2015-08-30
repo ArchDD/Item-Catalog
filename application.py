@@ -135,10 +135,15 @@ def showLogin():
     return render_template('login.html', STATE=state)
 
 
+@app.route('/logout')
+def showLogout():
+    state = login_session['state']
+    return render_template('logout.html', STATE=state)
+
+
 # connecting to google
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    print 'start gconnect'
     # only collect one-time code if state token matches
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -224,8 +229,6 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print 'this isssss'
-    print result
     # upon success reset session
     if result['status'] == '200':
         del login_session['access_token']
@@ -236,7 +239,8 @@ def gdisconnect():
 
         response = make_response(json.dumps('User disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        flash('You were successfully logged out!')
+        return redirect(url_for('homepage'),302)
     else:
         response_message = 'Failed to revoke token for given user.'
         response = make_response(json.dumps(response_message), 400)

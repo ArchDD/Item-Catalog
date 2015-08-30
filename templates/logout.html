@@ -21,27 +21,15 @@
         </div>
 
         <div id="main">
-        	<div id='signInButton'>
-				<span class='g-signin'
-					data-scope='openid email'
-					data-clientid='28700203699-vnlltcneevppgoor5v5sfj2ut115sf02.apps.googleusercontent.com'
-					data-redirecturi='postmessage'
-					data-accesstype='offline'
-					data-cookiepolicy='single_host_origin'
-					data-callback='signInCallback'
-					data-approvalprompt='force'>
-				</span>
-			</div>
-
-			<div id='result'></div>
+        	<div id='result'></div>
         </div>
      
-	    <div id="footer">
-	    </div>
+    	<div id="footer">
+    	</div>
     </div>
 
 	<script>
-	function signInCallback(authResult)
+	function signOutCallback(authResult)
 	{
 		if (authResult['code'])
 		{
