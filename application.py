@@ -1,4 +1,3 @@
-
 import random
 import string
 import httplib2
@@ -39,24 +38,32 @@ def itemJSON(item_id):
     return jsonify(Item=item.serialize)
 
 
+# hompage shows latest items
 @app.route('/')
 def homepage():
+    # all categories to be listed
     categories = session.query(Category).all()
+    # get latest items ordered by date and limit to 10
     all_latest_items = session.query(Item).order_by(desc(Item.date_added))
     latest_items = all_latest_items.limit(10).all()
     return render_template('home.html', categories=categories,
                            latest_items=latest_items)
 
 
+# a specific category page
 @app.route('/categories/<string:category_name>/')
 def categoryList(category_name):
+    # all categories still displayed on side bar
     categories = session.query(Category).all()
+    # retrieve matching category by name
     category = session.query(Category).filter_by(name=category_name).one()
+    # retrieve all items of matching category
     items = session.query(Item).filter_by(category_name=category_name)
     return render_template('category.html', categories=categories,
                            category=category, items=items)
 
 
+# the item page displays properties regarding that item
 @app.route('/categories/<string:category_name>/<int:item_id>/')
 def item(category_name, item_id):
     category = session.query(Category).filter_by(name=category_name).one()
@@ -69,11 +76,14 @@ def createItem(category_name):
     # directs user to login page if not logged on
     if 'username' not in login_session:
         return redirect('/login')
+    # GET method shows form, POST creates item on database
     if request.method == 'POST':
+        # create a new item object to be added on database
         createdItem = Item(name=request.form['name'],
                            description=request.form['description'],
                            category_name=category_name)
         session.add(createdItem)
+        # commit to save changes
         session.commit()
         return redirect(url_for('categoryList', category_name=category_name))
     else:
@@ -86,7 +96,9 @@ def updateItem(category_name, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     updatedItem = session.query(Item).filter_by(id=item_id).one()
+    # GET method shows form, POST updates item on database
     if request.method == 'POST':
+        # update item properties
         if request.form['name']:
             updatedItem.name = request.form['name']
         if request.form['description']:
@@ -95,7 +107,6 @@ def updateItem(category_name, item_id):
         session.commit()
         return redirect(url_for('categoryList', category_name=category_name))
     else:
-
         return render_template('updateitem.html', category_name=category_name,
                                item_id=item_id, item=updatedItem)
 
@@ -106,6 +117,7 @@ def deleteItem(category_name, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     deletingItem = session.query(Item).filter_by(id=item_id).one()
+    # GET method shows page to confirm deletion, POST deletes item on database
     if request.method == 'POST':
         session.delete(deletingItem)
         session.commit()
@@ -116,6 +128,7 @@ def deleteItem(category_name, item_id):
 
 @app.route('/login')
 def showLogin():
+    # generate state for confirmation
     state = ''.join(random.choice(string.ascii_uppercase +
                                   string.digits) for x in xrange(32))
     login_session['state'] = state
